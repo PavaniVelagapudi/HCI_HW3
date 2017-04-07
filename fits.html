@@ -1,0 +1,182 @@
+<html>
+	<head>
+		<title>
+		Circles </title>
+		<script src="https://d3js.org/d3.v4.min.js">
+		</script>
+
+	</head>
+	<body>
+
+	<script type="text/javascript">
+
+		var angle=[ [0,"5"],[0.899,"3"],[1.797,"1"],[2.696,"6"],[3.595,"4"],[4.493,"2"],[5.392,"7"] ];
+		var xcord=[1,2,3,4,5,6,7,8];
+		var ycord=[1,2,3,4,5,6,7,8];
+		var ts=[1,2,3,4,5,6,7,8];
+		var dist=[1,2,3,4,5,6,8];
+		var ta=[1,2,3,4,5,6,8];
+		var count=0;
+		var test=2;
+			var canvas=d3.select("body")
+			.append("svg")
+			.attr("width",500)
+			.attr("height",500);
+			//var cir=canvas.append
+			//("circle").attr("cx",30).attr("cy",40).attr("r",10);
+			canvas.selectAll("circle")
+				.data(angle)
+				.enter()
+				.append("circle")
+				.attr("cx",function(d,i) {return 250+50*Math.cos(d[0]); })
+				.attr("cy",function(d,i) {return 250+50*Math.sin(d[0]); })
+				.attr("r",15)
+				.attr("id",function(d,i){ test=d[1]; return d[1];})
+				.style("fill",function(d,i){ var fillingcolor; if(d[1]=="1") fillingcolor="red"; else fillingcolor="purple"; return fillingcolor})
+				.on("click",function()
+					{
+						
+						if(count<8)
+						{
+						d3.select(this).style("fill","red");
+						var coordinates = [0, 0];
+						coordinates = d3.mouse(this);
+						var x = coordinates[0];
+						var y = coordinates[1];
+						xcord[count]=x;
+						ycord[count]=y;
+						ts[count]=Date.now();
+						}
+						count=count+1;
+						//canvas.selectAll("circle").remove();
+						rcircles=canvas.selectAll("circle");
+						rcircles.each(function(d,i)
+						{
+							var rid=this.getAttribute("id");
+							var cid=count.toString();
+							if(rid==cid)
+								this.style.fill="red";
+							else
+								this.style.fill="purple";
+						}
+						)
+					//test=test+1;
+						
+					});
+			
+				
+
+			var buttons=d3.select("body")
+			.append("input")
+			.attr("type","button")
+			.attr("name","result")
+			.attr("value","result");
+
+			var buttons1=d3.select("body")
+			.append("input")
+			.attr("type","button")
+			.attr("name","Apply")
+			.attr("value","Apply");
+
+			buttons.on("click",function(d)
+			{
+				for(var i=1;i<8;i++)
+				{
+				var f=(xcord[i+1]-xcord[i])*(xcord[i+1]-xcord[i]);
+				var s=(ycord[i+1]-ycord[i])*(ycord[i+1]-ycord[i]);
+				dist[i]=Math.sqrt(f+s);
+				ta[i]=ts[i+1]-ts[i];
+				}
+			
+		
+
+			for(var i=1;i<8;i++)
+			{
+			var tab=document.getElementById("datav");
+
+			var row=tab.insertRow(0);
+			var cell1=row.insertCell(0);
+			var cell2=row.insertCell(1);
+			if(i==7)
+			{
+			cell1.innerHTML="Distance";
+			cell2.innerHTML="Time(in ms)"	
+			}
+			else
+			{
+			cell1.innerHTML=dist[i];
+			cell2.innerHTML=ta[i];
+			}
+		}
+			});
+		
+		buttons1.on("click",function(d)
+			{
+				test=2;
+				count=0;
+				canvas.selectAll("circle").remove();
+				var s=document.getElementById("text1").value;
+				var a=document.getElementById("text2").value;
+				canvas.selectAll("circle")
+				.data(angle)
+				.enter()
+				.append("circle")
+				.attr("cx",function(d,i) {return 250+((a/2)*Math.cos(d[0])); })
+				.attr("cy",function(d,i) {return 250+((a/2)*Math.sin(d[0])); })
+				.attr("r",s/2)
+				.attr("id",function(d,i){ test=d[1]; return d[1];})
+				.style("fill",function(d,i){ var fillingcolor; if(d[1]=="1") fillingcolor="red"; else fillingcolor="purple"; return fillingcolor})
+				.on("click",function()
+					{
+						
+						if(count<8)
+						{
+						d3.select(this).style("fill","red");
+						var coordinates = [0, 0];
+						coordinates = d3.mouse(this);
+						var x = coordinates[0];
+						var y = coordinates[1];
+						xcord[count]=x;
+						ycord[count]=y;
+						ts[count]=Date.now();
+						}
+						count=count+1;
+						//canvas.selectAll("circle").remove();
+						rcircles=canvas.selectAll("circle");
+						rcircles.each(function(d,i)
+						{
+							var rid=this.getAttribute("id");
+							var cid=count.toString();
+							if(rid==cid)
+								this.style.fill="red";
+							else
+								this.style.fill="purple";
+						}
+						)
+					
+					//test=test+1;
+						
+					});
+
+
+				
+			});
+
+			
+		</script>
+
+		<div>
+		<p>Enter Size</p>
+		<input type="number" id="text1" value=30 /><br>
+		<p>Enter Amplitude</p>
+		<input type="number" id="text2" value=100 /><br>
+		</div>
+		<br>
+		<div>
+		<table id="datav">
+
+		</table>
+		</div>
+			
+	</body>
+</html>
